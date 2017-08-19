@@ -119,14 +119,14 @@ public class Server extends CommunicationPartner {
             client.sendWithoutName(getConnectedClients());
 
             clients.add(client);
-            printToChat("Connection to " + client + " was established.");
+            printToChat(client + " has joined the conversation.");
 
             client.listen(Collections.unmodifiableList(clients));
 
             clients.remove(client);
-            printToChat("Connection to " + client + " was closed.");
+            printToChat(client + " has left the conversation.");
         } else {
-            printToChat("Client " + client + " entered a wrong password.");
+            printToChat(client + " entered a wrong password.");
         }
         client.closeConnection();
 
