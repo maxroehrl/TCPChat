@@ -24,24 +24,16 @@ public class Server extends CommunicationPartner {
     private final List<Client> clients = new ArrayList<>();
 
     /**
-     * The password of this server.
-     */
-    private String password;
-
-    /**
      * Create a new server.
      *
      * @param name The name.
-     * @param password The password.
      * @param port The port.
      * @param chatConsumer The function which prints to the chat text area.
      * @throws IOException If the creation of the server socket fails.
      */
-    public Server(String name, String password, int port,
-                  Consumer<String> chatConsumer)
+    public Server(String name, int port, Consumer<String> chatConsumer)
             throws IOException {
         super(name, chatConsumer);
-        this.password = password;
         serverSocket = new ServerSocket(port);
     }
 
@@ -82,15 +74,18 @@ public class Server extends CommunicationPartner {
 
     /**
      * Start waiting for incoming connections.
+     *
+     * @param serverPassword The server password.
      */
-    public void startServerSocketListener() {
+    public void startServerSocketListener(String serverPassword) {
         Thread serverSocketThread = new Thread(() -> {
             try {
                 while (true) {
                     Socket socket = serverSocket.accept();
                     Client client = new Client("Unknown", socket, chatConsumer);
 
-                    Thread t = new Thread(() -> checkAuthentication(client));
+                    Thread t = new Thread(() ->
+                            checkAuthentication(client, serverPassword));
                     t.setName("ServerClientListener");
                     t.start();
                 }
@@ -108,9 +103,10 @@ public class Server extends CommunicationPartner {
      * messages if the password is right.
      *
      * @param client The client.
+     * @param serverPassword The server password.
      */
-    private void checkAuthentication(Client client) {
-        if (client.checkAuthentication(password)) {
+    private void checkAuthentication(Client client, String serverPassword) {
+        if (client.checkAuthentication(serverPassword)) {
             // Send the new client's name to all other clients.
             sendWithoutName(LIMITER + client.getName());
 
