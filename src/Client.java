@@ -191,12 +191,12 @@ public class Client extends CommunicationPartner {
             String received;
 
             while ((received = inputStream.readLine()) != null) {
-                if (received.startsWith(LIMITER, 1)) {
+                if (received.startsWith(LIMITER + LIMITER)) {
                     // Show if a message partner has left.
                     printToChat("\"" +
-                            received.substring(1 + LIMITER.length()) +
+                            received.substring(2 * LIMITER.length()) +
                             "\" has left the conversation.");
-                } else if (received.startsWith(LIMITER, 0)) {
+                } else if (received.startsWith(LIMITER)) {
                     // Show if a new message partner is connected.
                     printToChat("\"" + received.substring(LIMITER.length()) +
                             "\" has joined the conversation.");

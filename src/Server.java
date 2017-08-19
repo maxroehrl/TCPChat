@@ -119,7 +119,7 @@ public class Server extends CommunicationPartner {
             client.listen(Collections.unmodifiableList(clients));
 
             clients.remove(client);
-            printToChat(client + " has left the conversation.");
+            printToChat("Connection to " + client + " was closed.");
         } else {
             printToChat(client + " entered a wrong password.");
         }
