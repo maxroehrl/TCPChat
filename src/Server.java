@@ -68,10 +68,17 @@ public class Server extends CommunicationPartner {
         if (text == null || text.isEmpty() || clients.isEmpty()) {
             return false;
         } else {
-            clients.forEach(client ->
-                    client.sendWithoutName(name + LIMITER + text));
+            sendWithoutName(name + LIMITER + text);
             return true;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void sendWithoutName(String text) {
+        clients.forEach(client -> client.sendWithoutName(text));
     }
 
     /**
@@ -106,8 +113,7 @@ public class Server extends CommunicationPartner {
     private void checkAuthentication(Client client) {
         if (client.checkAuthentication(password)) {
             // Send the new client's name to all other clients.
-            clients.forEach(otherClient ->
-                    otherClient.sendWithoutName(LIMITER + client.getName()));
+            sendWithoutName(LIMITER + client.getName());
 
             // Send server and client names to new client.
             client.sendWithoutName(getConnectedClients());
@@ -123,6 +129,9 @@ public class Server extends CommunicationPartner {
             printToChat("Client " + client + " entered a wrong password.");
         }
         client.closeConnection();
+
+        // Notify all remaining clients that this client has left.
+        sendWithoutName(LIMITER + LIMITER + client.getName());
     }
 
     /**

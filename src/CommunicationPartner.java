@@ -36,12 +36,21 @@ public abstract class CommunicationPartner {
     public abstract void closeConnection();
 
     /**
-     * Send a text to all connected communication partners.
+     * Send a text to all connected communication partners with the name of the
+     * current instance.
      *
      * @param text The text.
      * @return If the text was sent.
      */
     public abstract boolean send(String text);
+
+    /**
+     * Send a text to all connected communication partners without the name of
+     * the current instance.
+     *
+     * @param text The text to send.
+     */
+    protected abstract void sendWithoutName(String text);
 
     /**
      * Get the name.

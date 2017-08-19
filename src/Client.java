@@ -74,10 +74,9 @@ public class Client extends CommunicationPartner {
     }
 
     /**
-     * Send a text over the socket to the other client.
-     *
-     * @param text The text to send.
+     * {@inheritDoc}
      */
+    @Override
     protected void sendWithoutName(String text) {
         outputStream.println(text);
     }
@@ -192,10 +191,15 @@ public class Client extends CommunicationPartner {
             String received;
 
             while ((received = inputStream.readLine()) != null) {
-                if (received.startsWith(LIMITER)) {
+                if (received.startsWith(LIMITER, 1)) {
+                    // Show if a message partner has left.
+                    printToChat("\"" +
+                            received.substring(1 + LIMITER.length()) +
+                            "\" has left the conversation.");
+                } else if (received.startsWith(LIMITER, 0)) {
                     // Show if a new message partner is connected.
                     printToChat("\"" + received.substring(LIMITER.length()) +
-                            "\" is now connected.");
+                            "\" has joined the conversation.");
                 } else {
                     // Print all received messages to the chat text area.
                     printToChat(received.replace(LIMITER, ": "));
