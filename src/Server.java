@@ -43,7 +43,6 @@ public class Server extends CommunicationPartner {
         super(name, chatConsumer);
         this.password = password;
         serverSocket = new ServerSocket(port);
-        startServerSocketListener();
     }
 
     /**

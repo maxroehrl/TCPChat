@@ -324,6 +324,7 @@ public class TCPChat extends JFrame {
         try {
             communicationPartner = new Server(name, password, port,
                     this::invokeAppendToChat);
+            ((Server) communicationPartner).startServerSocketListener();
             appendToChat("Server was started at port " + port + ".");
         } catch (BindException e) {
             appendToChat("Error: Port already in use!");
